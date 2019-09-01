@@ -1,11 +1,16 @@
 package com.bethford.babysitterkata;
 
-import java.util.List;
-
 public class BabysitterPay {
 	
 	private int totalDailyPay;
 	private String bedtime;
+	
+	private int earliestStart = 17;
+	private int latestEnd = 4;
+	private int standardRate = 12;
+	private int bedTimeToMidnightRate = 8;
+	private int midnightTo4Rate = 16;
+	
 
 	public BabysitterPay(String bedtime) {
 		this.bedtime = bedtime;

@@ -46,5 +46,26 @@ public class BabysitterPayUnitTest {
 		int result = testPay.calculateTotalDailyPay("5:00 PM", "8:00 PM");
 		Assert.assertEquals(36, result);
 	}
+	
+	// Test for hours after bedtime and before midnight ONLY with 8PM bedtime. //
+	@Test
+	public void eight_per_hour_range_only_calculates_correctly() {
+		int result = testPay.calculateTotalDailyPay("8:00 PM", "10:00 PM");
+		Assert.assertEquals(16, result);
+	}
+	
+	// Test for hours after midnight ONLY with 8PM bedtime. //
+	@Test
+	public void sixteen_per_hour_range_only_calculates_correctly() {
+		int result = testPay.calculateTotalDailyPay("12:00 AM", "2:00 AM");
+		Assert.assertEquals(32, result);
+	}
+	
+	// Test for hours before 5PM to after 8PM. //
+	@Test
+	public void mixed_regular_low_and_out_of_bounds_calculates_correctly() {
+		int result = testPay.calculateTotalDailyPay("12:00 PM", "9:00 PM");
+		Assert.assertEquals(44, result);
+	}
 
 }
