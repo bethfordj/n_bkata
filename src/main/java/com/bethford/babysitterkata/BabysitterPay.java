@@ -2,13 +2,13 @@ package com.bethford.babysitterkata;
 
 import java.util.List;
 
-public class HourlyWorker {
+public class BabysitterPay {
 	
 	private int totalDailyPay;
-	private List<HourlyWage> allWageRates;
+	private String bedtime;
 
-	public HourlyWorker(List<HourlyWage> allWageRates) {
-		this.allWageRates = allWageRates;
+	public BabysitterPay(String bedtime) {
+		this.bedtime = bedtime;
 	}
 	
 	
