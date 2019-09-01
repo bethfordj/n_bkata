@@ -1,8 +1,5 @@
 package com.bethford.babysitterkata;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.junit.Before;
 import org.junit.Test;
 
@@ -67,5 +64,67 @@ public class BabysitterPayUnitTest {
 		int result = testPay.calculateTotalDailyPay("12:00 PM", "9:00 PM");
 		Assert.assertEquals(44, result);
 	}
+	
+	// Test for hours after bedtime to after midnight. //
+	@Test
+	public void after_bedtime_to_after_midnight_calculates_correctly() {
+		int result = testPay.calculateTotalDailyPay("8:00 PM", "1:00 AM");
+		Assert.assertEquals(48, result);
+	}
+	
+	// Test for hours before 5PM to after midnight. //
+	@Test
+	public void mixed_regular_low_late_and_out_of_bounds_calculates_correctly() {
+		int result = testPay.calculateTotalDailyPay("12:00 PM", "1:00 AM");
+		Assert.assertEquals(92, result);
+	}
+	
+	// Test for hours before 5PM to after 8PM. //
+	@Test
+	public void mixed_regular_low_and_late_calculates_correctly() {
+		int result = testPay.calculateTotalDailyPay("5:00 PM", "1:00 AM");
+		Assert.assertEquals(92, result);
+	}
+	
+	// Test for 15 minutes in standard hours and rate. //
+	@Test
+	public void standard_quarter_hour_calculates_correctly() {
+		int result = testPay.calculateTotalDailyPay("5:00 PM", "5:15 PM");
+		Assert.assertEquals(12, result);
+	}
+	
+	// Test for 15 minutes in after bedtime hours and rate. //
+	@Test
+	public void bedtime_quarter_hour_calculates_correctly() {
+		int result = testPay.calculateTotalDailyPay("8:00 PM", "8:15 PM");
+		Assert.assertEquals(8, result);
+	}
 
+	// Test for 15 minutes in after midnight hours and rate. //
+	@Test
+	public void after_midnight_quarter_hour_calculates_correctly() {
+		int result = testPay.calculateTotalDailyPay("12:00 AM", "12:15 AM");
+		Assert.assertEquals(16, result);
+	}
+	
+	// Test for fraction hours in standard and post bedtime hours and rate. //
+	@Test
+	public void partial_standard_and_partial_post_bedtime_calculates_correctly() {
+		int result = testPay.calculateTotalDailyPay("5:30 PM", "8:45 PM");
+		Assert.assertEquals(44, result);
+	}
+	
+	// Test for fraction hours in standard and post midnight hours and rate. //
+	@Test
+	public void partial_standard_and_partial_post_midnight_calculates_correctly() {
+		int result = testPay.calculateTotalDailyPay("5:30 PM", "12:45 AM");
+		Assert.assertEquals(92, result);
+	}
+	
+	// Test for fraction hours in post bedtime and post midnight hours and rate. //
+	@Test
+	public void partial_post_bedtime_and_partial_post_midnight_calculates_correctly() {
+		int result = testPay.calculateTotalDailyPay("8:30 PM", "12:45 AM");
+		Assert.assertEquals(48, result);
+	}
 }
