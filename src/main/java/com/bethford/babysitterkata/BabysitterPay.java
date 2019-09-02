@@ -29,20 +29,23 @@ public class BabysitterPay {
 	private int bedTimeToMidnightRate = 8;
 	private int midnightToFourRate = 16;
 
-	
-	
-	
-	// The constructor takes an assigned bedtime as a String and converts it to a
-	// private LocatTime variable
+	/**
+	 * CONSTRUCTOR: The constructor takes an assigned bedtime as a String and converts it to a
+	 * private LocatTime variable
+	 **/
 	public BabysitterPay(String bedtime) {
 		this.bedtime = convertStringTimeToLocalTime(bedtime);
 	}
-	
-	
-	
 
-	// The method for finding what the babysitter in question is owed for a single
-	// day's work: it takes a start time and end time as input.
+	/**********************************************************************************************************************
+	 * PUBLIC METHODS
+	 ********************************************************************************************************************/
+
+	
+	/**
+	 * Public method for finding what the babysitter in question is owed for a
+	 * single day's work: it takes a start time and end time as input.
+	 **/
 	public int calculateTotalDailyPay(String startTime, String endTime) {
 		LocalTime start = convertStringTimeToLocalTime(startTime);
 		LocalTime end = convertStringTimeToLocalTime(endTime);
@@ -64,20 +67,20 @@ public class BabysitterPay {
 
 		return totalDailyPay;
 	}
-	
-	
 
+	/** getter for totalDailyPay **/
 	public int getTotalDailyPay() {
 		return totalDailyPay;
 	}
 
+	/**********************************************************************************************************************
+	 * PRIVATE METHODS
+	 ********************************************************************************************************************/
 
-
-	
-	
-
-	// Private method to find the pay owed for time worked from 5PM to bedtime and
-	// discount hours outside of allowed working hours
+	/**
+	 * Private method to find the pay owed for time worked from 5PM to bedtime and
+	 * discount hours outside of allowed working hours
+	 **/
 	private int findStandardPayAmount(LocalTime startTime, LocalTime endTime) {
 		int hoursWorked = 0;
 
@@ -97,7 +100,9 @@ public class BabysitterPay {
 		return standardRate * hoursWorked;
 	}
 
-	// Private method to find the pay owed for time worked from bedtime to midnight
+	/**
+	 * Private method to find the pay owed for time worked from bedtime to midnight
+	 **/
 	private int findBedtimeToMidnightPayAmount(LocalTime startTime, LocalTime endTime) {
 		int hoursWorked = 0;
 
@@ -129,7 +134,7 @@ public class BabysitterPay {
 		return bedTimeToMidnightRate * hoursWorked;
 	}
 
-	// Private method to find the pay owed for time worked from midnight to 4AM
+	/** Private method to find the pay owed for time worked from midnight to 4AM **/
 	private int findMidnightToFourPayAmount(LocalTime startTime, LocalTime endTime) {
 		int hoursWorked = 0;
 		// Selects a time period that started before midnight
@@ -160,15 +165,21 @@ public class BabysitterPay {
 		return midnightToFourRate * hoursWorked;
 	}
 
-	// Private method to take a time as a String ("HH:mmAM" or "HH:mmPM") and convert it to a LocalTime object.
+	/**
+	 * Private method to take a time as a String ("HH:mmAM" or "HH:mmPM") and
+	 * convert it to a LocalTime object.
+	 **/
 	private LocalTime convertStringTimeToLocalTime(String time) {
 		String[] timeArray = time.substring(0, time.length() - 2).split(":");
 		int hour = getMilitaryHourFromString(time, timeArray);
 		int minutes = Integer.parseInt(timeArray[1]);
 		return LocalTime.of(hour, minutes);
 	}
-	
-	// Private method to take a time as a String ("HH:mmAM" or "HH:mmPM") and return an integer for the hour between 0 and 23 (inclusive).
+
+	/**
+	 * Private method to take a time as a String ("HH:mmAM" or "HH:mmPM") and return
+	 * an integer for the hour between 0 and 23 (inclusive).
+	 **/
 	private int getMilitaryHourFromString(String time, String[] timeArray) {
 		if (time.substring(time.length() - 2).contentEquals("AM")) {
 			if (timeArray[0].equals("12")) {
@@ -182,7 +193,10 @@ public class BabysitterPay {
 		}
 	}
 
-	// Private method to round up to the next hour if even 1 minute is worked over an hour
+	/**
+	 * Private method to round up to the next hour if even 1 minute is worked over
+	 * an hour
+	 **/
 	private int roundTimeToNextHour(double decimalHour) {
 		if (decimalHour - (int) decimalHour > 0) {
 			return (int) decimalHour + 1;
