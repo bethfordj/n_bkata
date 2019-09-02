@@ -58,9 +58,9 @@ public class BabysitterPayUnitTest {
 		Assert.assertEquals(32, result);
 	}
 	
-	// Test for hours before 5PM to after 8PM. //
+	// Test for hours before 5PM to after 8PM but before midnight. //
 	@Test
-	public void mixed_regular_low_and_out_of_bounds_calculates_correctly() {
+	public void mixed_standard_bedtime_and_out_of_bounds_calculates_correctly() {
 		int result = testPay.calculateTotalDailyPay("12:00PM", "9:00PM");
 		Assert.assertEquals(44, result);
 	}
@@ -74,14 +74,14 @@ public class BabysitterPayUnitTest {
 	
 	// Test for hours before 5PM to after midnight. //
 	@Test
-	public void mixed_regular_low_late_and_out_of_bounds_calculates_correctly() {
+	public void mixed_standard_bedtime_midnight_and_out_of_bounds_calculates_correctly() {
 		int result = testPay.calculateTotalDailyPay("12:00PM", "1:00AM");
 		Assert.assertEquals(92, result);
 	}
 	
-	// Test for hours before 5PM to after 8PM. //
+	// Test for hours before 5PM to after midnight. //
 	@Test
-	public void mixed_regular_low_and_late_calculates_correctly() {
+	public void mixed_standard_and_after_bedtime_calculates_correctly() {
 		int result = testPay.calculateTotalDailyPay("5:00PM", "1:00AM");
 		Assert.assertEquals(92, result);
 	}
