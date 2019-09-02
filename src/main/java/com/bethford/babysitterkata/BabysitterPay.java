@@ -31,6 +31,9 @@ public class BabysitterPay {
 		if (end.isAfter(bedtime)) {
 			bedtimeToMidnightPayForTheDay = findBedtimeToMidnightPayAmount(start, end);
 		}
+		if (end.isBefore(earliestStart)) {
+			midnightToFourPayForTheDay = findMidnightToFourPayAmount(start, end);
+		}
 		totalDailyPay = standardPayForTheDay + bedtimeToMidnightPayForTheDay + midnightToFourPayForTheDay;
 
 		return totalDailyPay;
@@ -38,34 +41,55 @@ public class BabysitterPay {
 
 	private int findStandardPayAmount(LocalTime startTime, LocalTime endTime) {
 		int hoursWorked = 0;
-		if ((startTime.isBefore(earliestStart) && startTime.isAfter(latestEnd)) || (startTime.isBefore(earliestStart)
-				&& startTime.isAfter(LocalTime.of(0, 0)) && startTime.isAfter(endTime))) {
+		if (startTime.isBefore(earliestStart) && (startTime.isAfter(latestEnd) || startTime.isAfter(endTime))) {
 			startTime = earliestStart;
 		}
-		if (endTime.isBefore(bedtime) && endTime.isAfter(startTime)) {
-			hoursWorked = (int)Math.round(MINUTES.between(startTime, endTime) / 60.0);
-		} else if (!startTime.equals(endTime)) {
-			hoursWorked = (int)Math.round(MINUTES.between(startTime, bedtime) / 60.0);
+		if (endTime.isBefore(bedtime) && endTime.isAfter(earliestStart)) {
+			hoursWorked = roundTimeToNextHour(MINUTES.between(startTime, endTime) / 60.0);
+		} else if (!startTime.equals(endTime) && (endTime.isAfter(bedtime) || endTime.equals(bedtime))) {
+			hoursWorked = roundTimeToNextHour(MINUTES.between(startTime, bedtime) / 60.0);
 		}
-		return 12 * hoursWorked;
+		return standardRate * hoursWorked;
 	}
 
 	private int findBedtimeToMidnightPayAmount(LocalTime startTime, LocalTime endTime) {
 		int hoursWorked = 0;
 		if (startTime.isBefore(bedtime) && startTime.isAfter(latestEnd)) {
 			if (endTime.isAfter(LocalTime.of(23,59)) || endTime.equals(LocalTime.MIDNIGHT)) {
-				hoursWorked = (int)Math.round((MINUTES.between(bedtime, LocalTime.of(23,59)) + 1) / 60.0);
+				hoursWorked = roundTimeToNextHour((MINUTES.between(bedtime, LocalTime.of(23,59)) + 1) / 60.0);
 			} else {
-				hoursWorked = (int)Math.round(MINUTES.between(bedtime, endTime) / 60.0);
+				hoursWorked = roundTimeToNextHour(MINUTES.between(bedtime, endTime) / 60.0);
 			}
 		} else if ((startTime.isAfter(bedtime) || startTime.equals(bedtime)) && startTime.isAfter(latestEnd)) {
 			if (endTime.isAfter(LocalTime.of(23,59)) || endTime.equals(LocalTime.MIDNIGHT)) {
-				hoursWorked = (int)Math.round(MINUTES.between(startTime, LocalTime.MIDNIGHT) / 60.0);
+				hoursWorked = roundTimeToNextHour(MINUTES.between(startTime, LocalTime.MIDNIGHT) / 60.0);
 			} else {
-				hoursWorked = (int)Math.round(MINUTES.between(startTime, endTime) / 60.0);
+				hoursWorked = roundTimeToNextHour(MINUTES.between(startTime, endTime) / 60.0);
 			}
 		}
-		return 8 * hoursWorked;
+		return bedTimeToMidnightRate * hoursWorked;
+	}
+	
+	private int findMidnightToFourPayAmount(LocalTime startTime, LocalTime endTime) {
+		int hoursWorked = 0;
+		if(startTime.isBefore(LocalTime.of(23,59)) || startTime.equals(LocalTime.MIDNIGHT)) {
+			if(endTime.isAfter(latestEnd) && endTime.isBefore(earliestStart) || endTime.equals(latestEnd)) {
+				hoursWorked = roundTimeToNextHour((MINUTES.between(LocalTime.MIDNIGHT, latestEnd)) / 60.0);
+			}
+			else {
+				hoursWorked = roundTimeToNextHour((MINUTES.between(LocalTime.MIDNIGHT, endTime)) / 60.0);
+			}
+			
+		}
+		else if(startTime.isBefore(latestEnd) && startTime.isAfter(LocalTime.MIDNIGHT)) {
+			if(endTime.isAfter(latestEnd) && endTime.isBefore(earliestStart) || endTime.equals(latestEnd)) {
+				hoursWorked = roundTimeToNextHour((MINUTES.between(startTime, latestEnd)) / 60.0);
+			}
+			else {
+				hoursWorked = roundTimeToNextHour((MINUTES.between(startTime, endTime)) / 60.0);
+			}
+		}
+		return midnightToFourRate * hoursWorked;
 	}
 
 	private LocalTime convertStringTimeToLocalTime(String time) {
@@ -85,6 +109,15 @@ public class BabysitterPay {
 			return 12;
 		} else {
 			return Integer.parseInt(timeArray[0]) + 12;
+		}
+	}
+	
+	private int roundTimeToNextHour(double decimalHour) {
+		if(decimalHour - (int)decimalHour > 0) {
+			return (int)decimalHour + 1;
+		}
+		else {
+			return (int)decimalHour;
 		}
 	}
 
