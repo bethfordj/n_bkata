@@ -42,12 +42,12 @@ public class BabysitterPay {
 		if((startTime.isBefore(earliestStart) && startTime.isAfter(latestEnd))
 				|| (startTime.isBefore(earliestStart) && startTime.isAfter(LocalTime.of(0, 0)) && startTime.isAfter(endTime))) {
 			startTime = earliestStart;
-			if(endTime.isBefore(bedtime)) {
-				hoursWorked = Math.round(MINUTES.between(startTime, endTime) / 60);
-			}
-			else {
-				hoursWorked = Math.round(MINUTES.between(startTime, bedtime) / 60);
-			}
+		}
+		if(endTime.isBefore(bedtime) && endTime.isAfter(startTime)) {
+			hoursWorked = Math.round(MINUTES.between(startTime, endTime) / 60);
+		}
+		else {
+			hoursWorked = Math.round(MINUTES.between(startTime, bedtime) / 60);
 		}
 		return 12 * hoursWorked;
 	}
@@ -68,6 +68,9 @@ public class BabysitterPay {
 				return 0;
 			}
 			return Integer.parseInt(timeArray[0]);
+		}
+		else if (Integer.parseInt(timeArray[0]) == 12){
+			return 12;
 		}
 		else {
 			return Integer.parseInt(timeArray[0]) + 12;
