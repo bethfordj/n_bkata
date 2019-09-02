@@ -64,7 +64,7 @@ public class BabysitterPay {
 			}
 		} else if ((startTime.isAfter(bedtime) || startTime.equals(bedtime)) && startTime.isAfter(latestEnd)) {
 			if (endTime.isBefore(earliestStart) || endTime.equals(LocalTime.MIDNIGHT)) {
-				hoursWorked = roundTimeToNextHour(MINUTES.between(startTime, LocalTime.MIDNIGHT) / 60.0);
+				hoursWorked = roundTimeToNextHour((MINUTES.between(startTime, LocalTime.of(23, 59)) + 1) / 60.0);
 			} else {
 				hoursWorked = roundTimeToNextHour(MINUTES.between(startTime, endTime) / 60.0);
 			}
