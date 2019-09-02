@@ -76,14 +76,14 @@ public class BabysitterPayUnitTest {
 	@Test
 	public void mixed_standard_bedtime_midnight_and_out_of_bounds_calculates_correctly() {
 		int result = testPay.calculateTotalDailyPay("12:00PM", "1:00AM");
-		Assert.assertEquals(92, result);
+		Assert.assertEquals(84, result);
 	}
 	
 	// Test for hours before 5PM to after midnight. //
 	@Test
 	public void mixed_standard_and_after_bedtime_calculates_correctly() {
 		int result = testPay.calculateTotalDailyPay("5:00PM", "1:00AM");
-		Assert.assertEquals(92, result);
+		Assert.assertEquals(84, result);
 	}
 	
 	// Test for 15 minutes in standard hours and rate. //
@@ -118,7 +118,7 @@ public class BabysitterPayUnitTest {
 	@Test
 	public void partial_standard_and_partial_post_midnight_calculates_correctly() {
 		int result = testPay.calculateTotalDailyPay("5:30PM", "12:45AM");
-		Assert.assertEquals(92, result);
+		Assert.assertEquals(84, result);
 	}
 	
 	// Test for fraction hours in post bedtime and post midnight hours and rate. //

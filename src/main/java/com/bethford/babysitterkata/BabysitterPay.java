@@ -26,9 +26,11 @@ public class BabysitterPay {
 		int standardPayForTheDay = 0;
 		int bedtimeToMidnightPayForTheDay = 0;
 		int midnightToFourPayForTheDay = 0;
-
-		standardPayForTheDay = findStandardPayAmount(start, end);
-		if (end.isAfter(bedtime)) {
+		
+		if (start.isBefore(bedtime) && start.isAfter(latestEnd)) {
+			standardPayForTheDay = findStandardPayAmount(start, end);
+		}
+		if (end.isAfter(bedtime) || end.isBefore(earliestStart)) {
 			bedtimeToMidnightPayForTheDay = findBedtimeToMidnightPayAmount(start, end);
 		}
 		if (end.isBefore(earliestStart)) {
@@ -46,7 +48,7 @@ public class BabysitterPay {
 		}
 		if (endTime.isBefore(bedtime) && endTime.isAfter(earliestStart)) {
 			hoursWorked = roundTimeToNextHour(MINUTES.between(startTime, endTime) / 60.0);
-		} else if (!startTime.equals(endTime) && (endTime.isAfter(bedtime) || endTime.equals(bedtime))) {
+		} else if (!startTime.equals(endTime)) {
 			hoursWorked = roundTimeToNextHour(MINUTES.between(startTime, bedtime) / 60.0);
 		}
 		return standardRate * hoursWorked;
@@ -55,13 +57,13 @@ public class BabysitterPay {
 	private int findBedtimeToMidnightPayAmount(LocalTime startTime, LocalTime endTime) {
 		int hoursWorked = 0;
 		if (startTime.isBefore(bedtime) && startTime.isAfter(latestEnd)) {
-			if (endTime.isAfter(LocalTime.of(23,59)) || endTime.equals(LocalTime.MIDNIGHT)) {
-				hoursWorked = roundTimeToNextHour((MINUTES.between(bedtime, LocalTime.of(23,59)) + 1) / 60.0);
+			if (endTime.isBefore(earliestStart) || endTime.equals(LocalTime.MIDNIGHT)) {
+				hoursWorked = roundTimeToNextHour((MINUTES.between(bedtime, LocalTime.of(23, 59)) + 1) / 60.0);
 			} else {
 				hoursWorked = roundTimeToNextHour(MINUTES.between(bedtime, endTime) / 60.0);
 			}
 		} else if ((startTime.isAfter(bedtime) || startTime.equals(bedtime)) && startTime.isAfter(latestEnd)) {
-			if (endTime.isAfter(LocalTime.of(23,59)) || endTime.equals(LocalTime.MIDNIGHT)) {
+			if (endTime.isBefore(earliestStart) || endTime.equals(LocalTime.MIDNIGHT)) {
 				hoursWorked = roundTimeToNextHour(MINUTES.between(startTime, LocalTime.MIDNIGHT) / 60.0);
 			} else {
 				hoursWorked = roundTimeToNextHour(MINUTES.between(startTime, endTime) / 60.0);
@@ -69,23 +71,20 @@ public class BabysitterPay {
 		}
 		return bedTimeToMidnightRate * hoursWorked;
 	}
-	
+
 	private int findMidnightToFourPayAmount(LocalTime startTime, LocalTime endTime) {
 		int hoursWorked = 0;
-		if(startTime.isBefore(LocalTime.of(23,59)) || startTime.equals(LocalTime.MIDNIGHT)) {
-			if(endTime.isAfter(latestEnd) && endTime.isBefore(earliestStart) || endTime.equals(latestEnd)) {
+		if (startTime.isBefore(LocalTime.of(23, 59)) || startTime.equals(LocalTime.MIDNIGHT)) {
+			if (endTime.isAfter(latestEnd) && endTime.isBefore(earliestStart) || endTime.equals(latestEnd)) {
 				hoursWorked = roundTimeToNextHour((MINUTES.between(LocalTime.MIDNIGHT, latestEnd)) / 60.0);
-			}
-			else {
+			} else {
 				hoursWorked = roundTimeToNextHour((MINUTES.between(LocalTime.MIDNIGHT, endTime)) / 60.0);
 			}
-			
-		}
-		else if(startTime.isBefore(latestEnd) && startTime.isAfter(LocalTime.MIDNIGHT)) {
-			if(endTime.isAfter(latestEnd) && endTime.isBefore(earliestStart) || endTime.equals(latestEnd)) {
+
+		} else if (startTime.isBefore(latestEnd) && startTime.isAfter(LocalTime.MIDNIGHT)) {
+			if (endTime.isAfter(latestEnd) && endTime.isBefore(earliestStart) || endTime.equals(latestEnd)) {
 				hoursWorked = roundTimeToNextHour((MINUTES.between(startTime, latestEnd)) / 60.0);
-			}
-			else {
+			} else {
 				hoursWorked = roundTimeToNextHour((MINUTES.between(startTime, endTime)) / 60.0);
 			}
 		}
@@ -111,13 +110,12 @@ public class BabysitterPay {
 			return Integer.parseInt(timeArray[0]) + 12;
 		}
 	}
-	
+
 	private int roundTimeToNextHour(double decimalHour) {
-		if(decimalHour - (int)decimalHour > 0) {
-			return (int)decimalHour + 1;
-		}
-		else {
-			return (int)decimalHour;
+		if (decimalHour - (int) decimalHour > 0) {
+			return (int) decimalHour + 1;
+		} else {
+			return (int) decimalHour;
 		}
 	}
 
