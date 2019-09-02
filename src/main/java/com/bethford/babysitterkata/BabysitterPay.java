@@ -46,7 +46,7 @@ public class BabysitterPay {
 		if(endTime.isBefore(bedtime) && endTime.isAfter(startTime)) {
 			hoursWorked = Math.round(MINUTES.between(startTime, endTime) / 60);
 		}
-		else {
+		else if(!startTime.equals(endTime)){
 			hoursWorked = Math.round(MINUTES.between(startTime, bedtime) / 60);
 		}
 		return 12 * hoursWorked;
