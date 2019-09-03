@@ -68,7 +68,55 @@ public class BabysitterPay {
 		return totalDailyPay;
 	}
 
-	/** getter for totalDailyPay **/
+	/* Getters & Setters */
+	public LocalTime getBedtime() {
+		return bedtime;
+	}
+
+	public void setBedtime(LocalTime bedtime) {
+		this.bedtime = bedtime;
+	}
+
+	public LocalTime getEarliestStart() {
+		return earliestStart;
+	}
+
+	public void setEarliestStart(LocalTime earliestStart) {
+		this.earliestStart = earliestStart;
+	}
+
+	public LocalTime getLatestEnd() {
+		return latestEnd;
+	}
+
+	public void setLatestEnd(LocalTime latestEnd) {
+		this.latestEnd = latestEnd;
+	}
+
+	public int getStandardRate() {
+		return standardRate;
+	}
+
+	public void setStandardRate(int standardRate) {
+		this.standardRate = standardRate;
+	}
+
+	public int getBedTimeToMidnightRate() {
+		return bedTimeToMidnightRate;
+	}
+
+	public void setBedTimeToMidnightRate(int bedTimeToMidnightRate) {
+		this.bedTimeToMidnightRate = bedTimeToMidnightRate;
+	}
+
+	public int getMidnightToFourRate() {
+		return midnightToFourRate;
+	}
+
+	public void setMidnightToFourRate(int midnightToFourRate) {
+		this.midnightToFourRate = midnightToFourRate;
+	}
+
 	public int getTotalDailyPay() {
 		return totalDailyPay;
 	}
